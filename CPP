@@ -35,22 +35,21 @@ std::array<TextureCoord, maxTexCoords> texCoords;
 std::array<Normal, maxNormals> normals;
 std::array<Face, maxFaces> faces;
 
-int vertexCount = 0;
-int texCoordCount = 0;
-int normalCount = 0;
-int faceCount = 0;
+double vertexCount = 0;
+double texCoordCount = 0;
+double normalCount = 0;
+double faceCount = 0;
 
 int main() {
-    std::ifstream objFile("your_file.obj");
+    std::ifstream objFile("cube.obj");
     if (!objFile) {
         std::cerr << "Unable to open the file." << std::endl;
         return 1;
     }
 
-    std::string line;
     std::string prefix;
     while (objFile >> prefix) {
-        if (prefix == "v") {
+       if (prefix == "v") {
             if (vertexCount < maxVertices) {
                 objFile >> vertices[vertexCount].x >> vertices[vertexCount].y >> vertices[vertexCount].z;
                 std::cout << "Vertex " << vertexCount << ": x=" << vertices[vertexCount].x << " y=" << vertices[vertexCount].y << " z=" << vertices[vertexCount].z << std::endl;
@@ -67,25 +66,21 @@ int main() {
                 objFile >> normals[normalCount].nx >> normals[normalCount].ny >> normals[normalCount].nz;
                 std::cout << "Normal " << normalCount << ": nx=" << normals[normalCount].nx << " ny=" << normals[normalCount].ny << " nz=" << normals[normalCount].nz << std::endl;
                 normalCount++;
-            }
+          }
         } else if (prefix == "f") {
             if (faceCount < maxFaces) {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     objFile >> faces[faceCount].vertexIndices[i] >> faces[faceCount].textureIndices[i] >> faces[faceCount].normalIndices[i];
                 }
                 std::cout << "Face " << faceCount << ": ";
-                for (int i = 0; i < 3; i++) {
-                    std::cout << "Vertex: " << faces[faceCount].vertexIndices[i] << " Texture: " << faces[faceCount].textureIndices[i] << " Normal: " << faces[faceCount].normalIndices[i] << " ";
+                for (int i = 0; i < 4; i++) {
+                    int vertexIndex = faces[faceCount].vertexIndices[i];
+                    std::cout << "x=" << vertices[vertexIndex].x << " y=" << vertices[vertexIndex].y << " z=" << vertices[vertexIndex].z << std::endl;
                 }
-                std::cout << std::endl;
                 faceCount++;
             }
         }
-
-        std::getline(objFile, line);
     }
-
-
 
     return 0;
 }
